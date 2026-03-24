@@ -1,73 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Task Manager</title>
+<title>Student Task Manager</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fb;
-            margin: 0;
-        }
+<style>
+body { font-family: Arial; background: #f4f7fb; }
 
-        .container {
-            max-width: 700px;
-            margin: 60px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
-        }
+.container {
+max-width: 700px;
+margin: 60px auto;
+background: white;
+padding: 30px;
+border-radius: 16px;
+}
 
-        form {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+h1 { text-align: center; }
 
-        input, select {
-            padding: 10px;
-        }
+form { display: flex; gap: 10px; }
 
-        li {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
+input, select {
+padding: 10px;
+border-radius: 8px;
+border: 1px solid #ccc;
+}
 
-        .high { color: red; }
-        .medium { color: orange; }
-        .low { color: green; }
-    </style>
+button {
+background: #2563eb;
+color: white;
+border: none;
+padding: 10px;
+border-radius: 8px;
+}
+
+li {
+display: flex;
+justify-content: space-between;
+background: #f9fafb;
+padding: 10px;
+margin-top: 10px;
+border-radius: 10px;
+}
+
+.completed { text-decoration: line-through; color: gray; }
+
+.badge {
+padding: 4px 8px;
+border-radius: 10px;
+font-size: 12px;
+}
+
+.high { background: #fee2e2; color: red; }
+.medium { background: #fef3c7; color: orange; }
+.low { background: #dcfce7; color: green; }
+
+.empty {
+text-align: center;
+margin-top: 20px;
+color: gray;
+}
+</style>
 </head>
 
 <body>
 <div class="container">
-    <h1>Student Task Manager</h1>
 
-    <form method="POST" action="/add">
-        <input type="text" name="task" placeholder="Enter task" required>
+<h1>Student Task Manager</h1>
 
-        <select name="priority">
-            <option value="Low">Low</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="High">High</option>
-        </select>
+<form method="POST" action="/add">
+<input name="task" placeholder="Add a new task..." required>
+<select name="priority">
+<option>Low</option>
+<option selected>Medium</option>
+<option>High</option>
+</select>
+<button>Add</button>
+</form>
 
-        <button>Add</button>
-    </form>
+{% if tasks %}
+<ul>
+{% for task in tasks %}
+<li class="{% if task.completed %}completed{% endif %}">
+<div>
+{{ task.text }}
+<span class="badge 
+{% if task.priority == 'High' %}high{% endif %}
+{% if task.priority == 'Medium' %}medium{% endif %}
+{% if task.priority == 'Low' %}low{% endif %}">
+{{ task.priority }}
+</span>
+</div>
 
-    <ul>
-        {% for task in tasks %}
-        <li>
-            <span class="{{ task.priority|lower }}">
-                {{ task.text }} ({{ task.priority }})
-            </span>
-            <a href="/delete/{{ loop.index0 }}">❌</a>
-        </li>
-        {% endfor %}
-    </ul>
+<div>
+<a href="/toggle/{{ loop.index0 }}">✔</a>
+<a href="/delete/{{ loop.index0 }}">🗑️</a>
+</div>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<div class="empty">
+No tasks yet. Add your first task!
+</div>
+{% endif %}
+
 </div>
 </body>
 </html>
