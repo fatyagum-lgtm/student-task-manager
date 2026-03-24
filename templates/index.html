@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            padding: 10px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .high { color: red; }
+        .medium { color: orange; }
+        .low { color: green; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Student Task Manager</h1>
+
+    <form method="POST" action="/add">
+        <input type="text" name="task" placeholder="Enter task" required>
+
+        <select name="priority">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+        </select>
+
+        <button>Add</button>
+    </form>
+
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <span class="{{ task.priority|lower }}">
+                {{ task.text }} ({{ task.priority }})
+            </span>
+            <a href="/delete/{{ loop.index0 }}">❌</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
