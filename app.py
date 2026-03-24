@@ -1,8 +1,22 @@
 from flask import Flask, request, redirect, render_template
+import json
+import os
 
 app = Flask(__name__)
 
-tasks = []
+FILE = "tasks.json"
+
+def load_tasks():
+    if os.path.exists(FILE):
+        with open(FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_tasks(tasks):
+    with open(FILE, "w") as f:
+        json.dump(tasks, f)
+
+tasks = load_tasks()
 
 @app.route('/')
 def home():
@@ -16,8 +30,10 @@ def add_task():
     if task_text:
         tasks.append({
             "text": task_text,
-            "priority": priority
+            "priority": priority,
+            "completed": False
         })
+        save_tasks(tasks)
 
     return redirect('/')
 
@@ -25,7 +41,15 @@ def add_task():
 def delete_task(index):
     if 0 <= index < len(tasks):
         tasks.pop(index)
+        save_tasks(tasks)
+    return redirect('/')
+
+@app.route('/toggle/<int:index>')
+def toggle_task(index):
+    if 0 <= index < len(tasks):
+        tasks[index]["completed"] = not tasks[index].get("completed", False)
+        save_tasks(tasks)
     return redirect('/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
