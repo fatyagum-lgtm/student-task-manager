@@ -27,7 +27,7 @@ https://student-task-manager-gtos.onrender.com
 
 ## How It Works
 
-Users can create tasks, assign a priority level, and manage them through a simple interface.  
+Users can create tasks, assign a priority level, and manage them through a simple interface. 
 Tasks are rendered dynamically using Jinja templates and stored in a JSON file so they remain available across sessions.
 
 ## Key Implementation Details
